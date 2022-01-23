@@ -2,58 +2,11 @@ import { useState } from 'react';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 
+import useCart from '../hooks/use-cart';
 import products from '../products.json';
-import { initiateCheckout } from '../lib/payments';
-
-const defaultCart = {
-  products: {},
-};
 
 export default function Home() {
-  const [cart, updateCart] = useState(defaultCart);
-
-  const cartItems = Object.keys(cart.products).map((key) => {
-    const product = products.find(({ id }) => `${id}` === `${key}`);
-    return {
-      ...cart.products[key],
-      pricePerItem: product.price,
-    };
-  });
-
-  const subtotal = cartItems.reduce((acc, { pricePerItem, quantity }) => {
-    return acc + pricePerItem * quantity;
-  }, 0);
-
-  const totalItems = cartItems.reduce((acc, { quantity }) => {
-    return acc + quantity;
-  }, 0);
-
-  function addToCart({ id }) {
-    updateCart((prev) => {
-      let cartState = { ...prev };
-
-      if (cartState.products[id]) {
-        cartState.products[id].quantity = cartState.products[id].quantity + 1;
-      } else {
-        cartState.products[id] = {
-          id,
-          quantity: 1,
-        };
-      }
-      return cartState;
-    });
-  }
-
-  function checkout() {
-    initiateCheckout({
-      lineItems: cartItems.map((item) => {
-        return {
-          price: item.id,
-          quantity: item.quantity,
-        };
-      }),
-    });
-  }
+  const { subTotal, quantity, addToCart, checkout } = useCart();
 
   return (
     <div className={styles.container}>
@@ -71,9 +24,9 @@ export default function Home() {
         </p>
 
         <p className={styles.description}>
-          <strong>Items:</strong> {totalItems}
+          <strong>Items:</strong> {quantity}
           <br />
-          <strong>Total Cost:</strong> ${subtotal}
+          <strong>Total Cost:</strong> ${subTotal}
           <br />
           <button className={styles.button} onClick={checkout}>
             Check Out
