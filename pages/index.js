@@ -1,12 +1,12 @@
-import { useState } from 'react';
 import Head from 'next/head';
+import { FaShoppingCart } from 'react-icons/fa';
 import styles from '../styles/Home.module.css';
 
-import useCart from '../hooks/use-cart';
+import { useCart } from '../hooks/use-cart.js';
 import products from '../products.json';
 
 export default function Home() {
-  const { subTotal, quantity, addToCart, checkout } = useCart();
+  const { addToCart } = useCart();
 
   return (
     <div className={styles.container}>
@@ -21,16 +21,6 @@ export default function Home() {
 
         <p className={styles.description}>
           The best space jellyfish swag in the universe!
-        </p>
-
-        <p className={styles.description}>
-          <strong>Items:</strong> {quantity}
-          <br />
-          <strong>Total Cost:</strong> ${subTotal}
-          <br />
-          <button className={styles.button} onClick={checkout}>
-            Check Out
-          </button>
         </p>
 
         <ul className={styles.grid}>
