@@ -28,15 +28,42 @@ const columns = [
 ];
 
 export default function Home() {
-  const { cartItems, checkout } = useCart();
+  const { cartItems, checkout, updateItem } = useCart();
 
   const data = cartItems.map(({ id, quantity, pricePerUnit }) => {
     const product = products.find(({ id: pid }) => pid === id);
+    function handleOnSubmit(e) {
+      e.preventDefault();
+
+      const { currentTarget } = e;
+      const inputs = Array.from(currentTarget.elements);
+      const quantity = inputs.find((input) => input.name === 'quantity')?.value;
+
+      updateItem({
+        id,
+        quantity: quantity && parseInt(quantity),
+      });
+    }
+
+    const Quantity = () => {
+      return (
+        <form className={styles.cartQuantity} onSubmit={handleOnSubmit}>
+          <input
+            name='quantity'
+            type='number'
+            min={0}
+            defaultValue={quantity}
+          />
+          <button className={styles.button}>Update</button>
+        </form>
+      );
+    };
+
     const { title } = product || {};
     return {
       id,
       title,
-      quantity,
+      quantity: <Quantity />,
       pricePerUnit: pricePerUnit.toFixed(2),
       total: (quantity * pricePerUnit).toFixed(2),
     };
