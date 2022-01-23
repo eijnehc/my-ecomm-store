@@ -1,5 +1,5 @@
 import { FaShoppingCart } from 'react-icons/fa';
-
+import Link from 'next/link';
 import styles from '../Nav/Nav.module.css';
 
 import { useCart } from '../../hooks/use-cart.js';
@@ -10,9 +10,11 @@ const Nav = () => {
     <nav className={styles.nav}>
       <p className={styles.navTitle}>Space Jelly Shop</p>
       <p className={styles.navCart}>
-        <button onClick={checkout}>
-          <FaShoppingCart /> ${subtotal.toFixed(2)}
-        </button>
+        <Link href='cart'>
+          <a>
+            <FaShoppingCart /> ${subtotal.toFixed(2)}
+          </a>
+        </Link>
       </p>
     </nav>
   );
